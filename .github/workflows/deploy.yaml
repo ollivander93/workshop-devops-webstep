@@ -1,0 +1,41 @@
+name: Deploy to production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      id-token: write
+    environment:
+      name: "github-pages"
+      url: ${{ env.PUBLIC_URL }}/
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Initialize our deploy URL
+        id: deployment_url
+        run: echo "PUBLIC_URL=${{vars.PUBLIC_URL}}/main" >> $GITHUB_ENV
+
+      - name: Build our project
+        run: npm run build
+
+      - uses: JamesIves/github-pages-deploy-action@v4.4.1
+        id: deployment
+        with:
+          folder: ./build
+          target-folder: main
+          clean: false
