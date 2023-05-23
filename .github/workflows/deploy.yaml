@@ -1,0 +1,46 @@
+name: Delpoy
+
+on:
+  workflow_dispatch:
+    inputs:
+        versionType:
+            type: choice
+            description: "Semver"
+            required: true
+            options:
+                - patch
+                - minor
+                - major
+
+jobs:
+  Build:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      id-token: write
+    environment:
+      name: staging
+      url: ${{env.PUBLIC_URL}}/
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Initialize deployment URL
+        run: echo "PUBLIC_URL=${{vars.PUBLIC_URL}}/${{github.head_ref}}" >> $GITHUB_ENV
+
+      - name: Run end to end tests
+        run: npm run build
+
+      - uses: JamesIves/github-pages-deploy-action@v4.4.1
+        with:
+          folder: ./build
+          target-folder: ${{github.head_ref}}
+          clean: false
