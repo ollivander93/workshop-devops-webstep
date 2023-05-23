@@ -21,5 +21,19 @@ jobs:
       - name: Run unit tests
         run: npm run test
 
+  EndToEndTests:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Run end to end tests
         run: npm run e2e:run
