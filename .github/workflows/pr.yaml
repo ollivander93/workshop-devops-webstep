@@ -7,4 +7,16 @@ jobs:
   UnitTests:
     runs-on: ubuntu-22.04
     steps:
-      - run: echo Hello World
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        run: npm run tests
