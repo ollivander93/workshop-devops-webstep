@@ -3,6 +3,8 @@ name: PR Deployment
 on:
   pull_request:
   push:
+    tags:
+      - tagname
     branches:
       - main
 
