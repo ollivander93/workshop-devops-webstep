@@ -53,5 +53,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Initialize deployment URL
+        run: echo "PUBLIC_URL=${{vars.PUBLIC_URL}}/${{github.head_ref}}" >> $GITHUB_ENV
+
       - name: Run end to end tests
         run: npm run build
